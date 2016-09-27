@@ -1,0 +1,11 @@
+rails server //Levanta el servidor en la carpeta del proyecto
+
+rails new nombreproyecto // Crea un proyecto
+
+rails generate controller // crea un controlador
+
+rails generate controller namecontroller view //Crea un controlador con una vista
+
+rails generate model //crea un modelo
+
+

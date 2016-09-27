@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="Css/style.css"/>
+    <title></title>
+</head>
+<body onload="javascript:cambiarPestanna(pestanas,pestana1);javascript:fnButtons();">
+
+        <h1>Login</h1>
+        <form id="form_login" method="post">
+            <label for="username">Username</label>
+            <br/>
+            <input type="text" name="user[username]" id="username" />
+            <br/>
+            <label for="password">Password</label>
+            <br/>
+            <input type="password" name="user[password]" id="password" />
+            <br/>
+            <br/>
+            <button type="button" id="user_login" >Login</button>
+            <button type="button" id="user_logout" >Log out</button>
+            <br/>
+            <br/>
+            <textarea name="" id="userlogin_result"></textarea>
+        </form>
+    <br/>
+        <h2>Products</h2>
+
+            <input type="text" id="formproductid" />
+            <button id="get_products" type="button">Get Products</button>
+            <br/>
+            <textarea name="" id="products_result"></textarea>
+        <div class="contenedor">
+            <div id="pestanas">
+                <ul id=lista>
+                    <li id="pestana1"><a href='javascript:cambiarPestanna(pestanas,pestana1);'>New Product</a></li>
+                    <li id="pestana2"><a href='javascript:cambiarPestanna(pestanas,pestana2);'>Delete</a></li>
+                    <li id="pestana3"><a href='javascript:cambiarPestanna(pestanas,pestana3);'>Edit</a></li>
+                </ul>
+            </div>
+
+
+
+            <div id="contenidopestanas">
+                <div id="cpestana1">
+                    <h3>New Product</h3>
+                    <form accept-charset="UTF-8" method="post" id="form_newproduct">
+                        <label for="new_product_name">Name</label>
+                        <br/>
+                        <input type="text" name="product[name]" id="new_product_name" />
+                        <br/>
+                        <label for="new_product_price">Price</label>
+                        <br/>
+                        <input type="number" name="product[price]" id="new_product_price" />
+                        <br/>
+                        <label for="new_product_state">State</label>
+                        <br/>
+                        <input type="number" name="product[state]" id="new_product_state" />
+                        <br/>
+                        <br/>
+                        <button type="button" id="new_product" >Create Product</button>
+                        <br/>
+                        <br/>
+                        <textarea name="" id="createproduct_result"></textarea>
+                    </form>
+                </div>
+                <div id="cpestana2">
+                    <h3>Delete</h3>
+                    <input type="text" id="delete_productid" />
+                    <button id="delete_product" type="button">Delete Product</button>
+                    <br/>
+                    <br/>
+                    <textarea name="" id="deleteproduct_result"></textarea>
+                </div>
+                <div id="cpestana3">
+                    <form accept-charset="UTF-8" method="post" id="form_editproduct">
+                        <label for="edit_product_name">Name</label>
+                        <br/>
+                        <input type="text" name="product[name]" id="edit_product_name" />
+                        <br/>
+                        <label for="edit_product_price">Price</label>
+                        <br/>
+                        <input type="number" name="product[price]" id="edit_product_price" />
+                        <br/>
+                        <label for="edit_product_state">State</label>
+                        <br/>
+                        <input type="number" name="product[state]" id="edit_product_state" />
+                        <br/>
+                        <br/>
+                        <button type="button" id="edit_product" >Edit Product</button>
+                        <br/>
+                        <br/>
+                        <textarea name="" id="editproduct_result"></textarea>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+            <h2>Transactions</h2>
+
+            <input type="text" id="formtransactionid" />
+            <button id="get_transactions" type="button">Get Transactions</button>
+            <br/>
+            <textarea name="" id="transactions_result"></textarea>
+            <br/>
+            <br/>
+            <br/>
+        <form accept-charset="UTF-8" method="post" id="form_newtransaction">
+            <label for="transaction_offert_product_id">Offert product</label>
+            <br/>
+            <input type="number" name="transaction[offert_product_id]" id="transaction_offert_product_id" />
+            <br/>
+            <label for="transaction_require_product_id">Require product</label>
+            <br/>
+            <input type="text" name="transaction[require_product_id]" id="transaction_require_product_id" />
+            <br/>
+            <br/>
+            <button type="button" id="new_transaction" >Create Transaction</button>
+            <br/>
+            <br/>
+            <textarea name="" id="createtransaction_result"></textarea>
+        </form>
+
+</body>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="JavaScript/index.js">
+    fnButtons();
+</script>
+</html>
+
