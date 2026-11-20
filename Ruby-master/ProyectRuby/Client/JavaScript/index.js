@@ -1,222 +1,231 @@
 /**
- * Created by ronald on 15/04/15.
+ * ProyectRuby REST Client (hardened & testable in browser and Node)
  */
-var url="http://localhost:3000/"
+(function (root) {
+  'use strict';
 
-    function fnButtons() {
-        $("#user_login").bind("click", function () {
-            var formdata = $("#form_login").serialize();
-            var tempurl = url;
-
-            tempurl += "login.json";
-            console.log(tempurl);
-            $.ajax({
-                url: tempurl,
-                method: "POST",
-                data: formdata,
-                dataType: "json",
-                success: function (data) {
-                    $('#userlogin_result').val(JSON.stringify(data))
-                    localStorage.setItem('authtoken',data.auth_token);
-                },
-                error:function( jqXHR, textStatus ) {
-                    $('#userlogin_result').val(jqXHR.status+" Something went wrong");
-                    console.log(textStatus);
-                }
-            });
-        });
-
-        $("#user_logout").bind("click", function () {
-            var tempurl = url;
-            tempurl += "logout.json";
-            console.log(tempurl);
-            $.ajax({
-                url: tempurl,
-                method: "GET",
-                dataType: "json",
-                headers: { Authorization: localStorage.getItem('authtoken')},
-                success: function (data) {
-                    $('#userlogin_result').val(JSON.stringify(data))
-
-                },
-                error:function( jqXHR, textStatus ) {
-                    $('#userlogin_result').val(jqXHR.status+" Something went wrong");
-                    console.log(textStatus);
-                }
-            });
-        });
-
-        $("#get_products").bind("click", function () {
-            var id = document.getElementById('formproductid').value
-            console.log("you press" + id);
-            console.log();
-            var tempurl = url;
-            if (id == "") {
-                tempurl += "products.json";
-            }
-            else {
-                tempurl += "products/" + id + ".json";
-            }
-            $.ajax({
-                url: tempurl,
-                method: "GET",
-                headers: { Authorization: localStorage.getItem('authtoken')},
-                success: function (data) {
-                    var requestdata = JSON.stringify(data);
-                    $('#products_result').val(requestdata);
-                    requestdata = JSON.parse(requestdata);
-                    if (requestdata.length == undefined) {
-                        $('#edit_product_name').val(requestdata.name);
-                        $('#edit_product_price').val(requestdata.price);
-                        $('#edit_product_state').val(requestdata.state);
-                    }
-
-                },
-                error:function( jqXHR, textStatus ) {
-                    $('#products_result').val(jqXHR.status+" The code you input doesnt exist or Something went wrong");
-                    console.log(textStatus);
-                }
-            });
-        });
-        $("#new_product").bind("click", function () {
-            var formdata = $("#form_newproduct").serialize();
-            var tempurl = url;
-            tempurl += "products.json";
-            $.ajax({
-                url: tempurl,
-                method: "POST",
-                data: formdata,
-                dataType: "json",
-                headers: { Authorization: localStorage.getItem('authtoken')},
-                success: function (data) {
-                    $('#createproduct_result').val(JSON.stringify(data))
-                },
-                error:function( jqXHR, textStatus ) {
-                    $('#createproduct_result').val(jqXHR.status+" Something went wrong");
-                    console.log(textStatus);
-                }
-            });
-        });
-
-
-        $("#delete_product").bind("click", function () {
-            var id = document.getElementById('delete_productid').value
-            var tempurl = url;
-            tempurl += "products/"+id+".json";
-            $.ajax({
-                type: "POST",
-                url: tempurl,
-                dataType: "json",
-                headers: { Authorization: localStorage.getItem('authtoken')},
-                success: function (data) {
-                    $('#deleteproduct_result').val(JSON.stringify(data))
-                },
-                error:function( jqXHR, textStatus ) {
-                    $('#deleteproduct_result').val(jqXHR.status+" Something went wrong");
-                    console.log(textStatus);
-                }
-            });
-        });
-
-        $("#edit_product").bind("click", function () {
-            var id = document.getElementById('formproductid').value
-            var formdata = $("#form_editproduct").serialize();
-            var tempurl = url;
-            tempurl += "products/"+id+".json";
-            $.ajax({
-                url: tempurl,
-                method: "PUT",
-                data: formdata,
-                dataType: "json",
-                headers: { Authorization: localStorage.getItem('authtoken')},
-                success: function (data) {
-                    $('#editproduct_result').val(JSON.stringify(data))
-                },
-                error:function( jqXHR, textStatus ) {
-                    $('#editproduct_result').val(jqXHR.status+" Something went wrong");
-                    console.log(textStatus);
-                }
-            });
-        });
-        $("#get_transactions").bind("click", function () {
-            var id = document.getElementById('formtransactionid').value
-            console.log("you press" + id);
-            console.log();
-            var tempurl = url;
-            if (id == "") {
-                tempurl += "transactions.json";
-            }
-            else {
-                tempurl += "transactions/" + id + ".json";
-            }
-            $.ajax({
-                url: tempurl,
-                method: "GET",
-                headers: { Authorization: localStorage.getItem('authtoken')},
-                success: function (data) {
-                    var requestdata = JSON.stringify(data);
-                    $('#transactions_result').val(requestdata);
-                },
-                error:function( jqXHR, textStatus ) {
-                    $('#transactions_result').val(jqXHR.status+" The code you input doesnt exist or Something went wrong");
-                    console.log(textStatus);
-                }
-            });
-        });
-
-        $("#new_transaction").bind("click", function () {
-            var formdata = $("#form_newtransaction").serialize();
-            var tempurl = url;
-            tempurl += "transactions.json";
-            $.ajax({
-                url: tempurl,
-                method: "POST",
-                data: formdata,
-                dataType: "json",
-                headers: { Authorization: localStorage.getItem('authtoken')},
-                success: function (data) {
-                    $('#createtransaction_result').val(JSON.stringify(data))
-                },
-                error:function( jqXHR, textStatus ) {
-                    $('#createtransaction_result').val(jqXHR.status+" Something went wrong");
-                    console.log(textStatus);
-                }
-            });
-        });
+  function resolveApiBase(override) {
+    var base = override;
+    if (!base && typeof root !== 'undefined' && root.PROYECTRUBY_API_URL) {
+      base = root.PROYECTRUBY_API_URL;
     }
+    if (!base && typeof root !== 'undefined' && root.localStorage) {
+      try {
+        base = root.localStorage.getItem('api_url');
+      } catch (e) {
+        base = null;
+      }
+    }
+    base = String(base || 'http://localhost:3000/').trim();
+    return base.endsWith('/') ? base : base + '/';
+  }
 
+  function buildResourceUrl(base, resource, id) {
+    var rootUrl = resolveApiBase(base);
+    var cleanId = id == null ? '' : String(id).trim();
+    if (!cleanId) {
+      return rootUrl + resource + '.json';
+    }
+    return rootUrl + resource + '/' + encodeURIComponent(cleanId) + '.json';
+  }
 
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = {
+      resolveApiBase: resolveApiBase,
+      buildResourceUrl: buildResourceUrl
+    };
+    return;
+  }
 
+  var $ = root.jQuery || root.$;
 
-    function cambiarPestanna(pestannas, pestanna) {
+  function authHeaders() {
+    var token = null;
+    try {
+      token = root.localStorage ? root.localStorage.getItem('authtoken') : null;
+    } catch (e) {
+      token = null;
+    }
+    return token ? { Authorization: token } : {};
+  }
 
-        // Obtiene los elementos con los identificadores pasados.
-        pestanna = document.getElementById(pestanna.id);
-        listaPestannas = document.getElementById(pestannas.id);
+  function fnButtons() {
+    if (!$) return;
 
-        // Obtiene las divisiones que tienen el contenido de las pestañas.
-        cpestanna = document.getElementById('c' + pestanna.id);
-        listacPestannas = document.getElementById('contenido' + pestannas.id);
-
-        i = 0;
-        // Recorre la lista ocultando todas las pestañas y restaurando el fondo
-        // y el padding de las pestañas.
-        while (typeof listacPestannas.getElementsByTagName('div')[i] != 'undefined') {
-            $(document).ready(function () {
-                $(listacPestannas.getElementsByTagName('div')[i]).css('display', 'none');
-                $(listaPestannas.getElementsByTagName('li')[i]).css('background', '');
-                $(listaPestannas.getElementsByTagName('li')[i]).css('padding-bottom', '');
-            });
-            i += 1;
+    $('#user_login').off('click').on('click', function () {
+      var formdata = $('#form_login').serialize();
+      $.ajax({
+        url: resolveApiBase() + 'login.json',
+        method: 'POST',
+        data: formdata,
+        dataType: 'json',
+        success: function (data) {
+          $('#userlogin_result').val(JSON.stringify(data));
+          if (data && data.auth_token && root.localStorage) {
+            root.localStorage.setItem('authtoken', data.auth_token);
+          }
+        },
+        error: function (jqXHR) {
+          $('#userlogin_result').val(jqXHR.status + ' Error al iniciar sesión');
         }
-        $(document).ready(function () {
-            // Muestra el contenido de la pestaña pasada como parametro a la funcion,
-            // cambia el color de la pestaña y aumenta el padding para que tape el
-            // borde superior del contenido que esta juesto debajo y se vea de este
-            // modo que esta seleccionada.
-            $(cpestanna).css('display', '');
-            $(pestanna).css('background', 'dimgray');
-            $(pestanna).css('padding-bottom', '2px');
-        });
-    }
+      });
+    });
 
+    $('#user_logout').off('click').on('click', function () {
+      $.ajax({
+        url: resolveApiBase() + 'logout.json',
+        method: 'GET',
+        dataType: 'json',
+        headers: authHeaders(),
+        success: function (data) {
+          if (root.localStorage) {
+            root.localStorage.removeItem('authtoken');
+          }
+          $('#userlogin_result').val(JSON.stringify(data));
+        },
+        error: function (jqXHR) {
+          $('#userlogin_result').val(jqXHR.status + ' Error al cerrar sesión');
+        }
+      });
+    });
+
+    $('#get_products').off('click').on('click', function () {
+      var idEl = document.getElementById('formproductid');
+      var id = idEl ? idEl.value.trim() : '';
+      $.ajax({
+        url: buildResourceUrl(null, 'products', id),
+        method: 'GET',
+        headers: authHeaders(),
+        success: function (data) {
+          $('#products_result').val(JSON.stringify(data));
+          if (data && !Array.isArray(data)) {
+            $('#edit_product_name').val(data.name || '');
+            $('#edit_product_price').val(data.price != null ? data.price : '');
+            $('#edit_product_state').val(data.state != null ? data.state : '');
+          }
+        },
+        error: function (jqXHR) {
+          $('#products_result').val(jqXHR.status + ' No se encontró el producto o ocurrió un error');
+        }
+      });
+    });
+
+    $('#new_product').off('click').on('click', function () {
+      var formdata = $('#form_newproduct').serialize();
+      $.ajax({
+        url: buildResourceUrl(null, 'products', ''),
+        method: 'POST',
+        data: formdata,
+        dataType: 'json',
+        headers: authHeaders(),
+        success: function (data) {
+          $('#createproduct_result').val(JSON.stringify(data));
+        },
+        error: function (jqXHR) {
+          $('#createproduct_result').val(jqXHR.status + ' No se pudo crear el producto');
+        }
+      });
+    });
+
+    $('#delete_product').off('click').on('click', function () {
+      var id = ($('#delete_productid').val() || '').trim();
+      if (!id) {
+        $('#deleteproduct_result').val('Ingrese un identificador de producto válido.');
+        return;
+      }
+      $.ajax({
+        url: buildResourceUrl(null, 'products', id),
+        method: 'DELETE',
+        dataType: 'json',
+        headers: authHeaders(),
+        success: function (data) {
+          $('#deleteproduct_result').val(JSON.stringify(data || { deleted: true }));
+        },
+        error: function (jqXHR) {
+          $('#deleteproduct_result').val(jqXHR.status + ' No se pudo eliminar el producto');
+        }
+      });
+    });
+
+    $('#edit_product').off('click').on('click', function () {
+      var idEl = document.getElementById('formproductid');
+      var id = idEl ? idEl.value.trim() : '';
+      if (!id) {
+        $('#editproduct_result').val('Ingrese el ID del producto a editar.');
+        return;
+      }
+      var formdata = $('#form_editproduct').serialize();
+      $.ajax({
+        url: buildResourceUrl(null, 'products', id),
+        method: 'PUT',
+        data: formdata,
+        dataType: 'json',
+        headers: authHeaders(),
+        success: function (data) {
+          $('#editproduct_result').val(JSON.stringify(data));
+        },
+        error: function (jqXHR) {
+          $('#editproduct_result').val(jqXHR.status + ' No se pudo actualizar el producto');
+        }
+      });
+    });
+
+    $('#get_transactions').off('click').on('click', function () {
+      var idEl = document.getElementById('formtransactionid');
+      var id = idEl ? idEl.value.trim() : '';
+      $.ajax({
+        url: buildResourceUrl(null, 'transactions', id),
+        method: 'GET',
+        headers: authHeaders(),
+        success: function (data) {
+          $('#transactions_result').val(JSON.stringify(data));
+        },
+        error: function (jqXHR) {
+          $('#transactions_result').val(jqXHR.status + ' No se encontró la transacción o ocurrió un error');
+        }
+      });
+    });
+
+    $('#new_transaction').off('click').on('click', function () {
+      var formdata = $('#form_newtransaction').serialize();
+      $.ajax({
+        url: buildResourceUrl(null, 'transactions', ''),
+        method: 'POST',
+        data: formdata,
+        dataType: 'json',
+        headers: authHeaders(),
+        success: function (data) {
+          $('#createtransaction_result').val(JSON.stringify(data));
+        },
+        error: function (jqXHR) {
+          $('#createtransaction_result').val(jqXHR.status + ' No se pudo crear la transacción');
+        }
+      });
+    });
+  }
+
+  function cambiarPestanna(pestannas, pestanna) {
+    if (!pestannas || !pestanna) return;
+    var tabEl = document.getElementById(pestanna.id);
+    var listEl = document.getElementById(pestannas.id);
+    var panelEl = document.getElementById('c' + pestanna.id);
+    var panelsContainer = document.getElementById('contenido' + pestannas.id);
+    if (!tabEl || !listEl || !panelEl || !panelsContainer) return;
+
+    var divs = panelsContainer.children;
+    for (var i = 0; i < divs.length; i++) {
+      divs[i].style.display = 'none';
+    }
+    var tabs = listEl.getElementsByTagName('li');
+    for (var j = 0; j < tabs.length; j++) {
+      tabs[j].style.background = '';
+      tabs[j].style.paddingBottom = '';
+    }
+    panelEl.style.display = '';
+    tabEl.style.background = 'dimgray';
+    tabEl.style.paddingBottom = '2px';
+  }
+
+  root.fnButtons = fnButtons;
+  root.cambiarPestanna = cambiarPestanna;
+})(typeof window !== 'undefined' ? window : globalThis);

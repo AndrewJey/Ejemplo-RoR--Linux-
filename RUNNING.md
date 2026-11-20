@@ -23,3 +23,10 @@ Inventario y compilaciones locales del 2026-11-15. Una compilación correcta no 
 
 `.gitignore` excluye credenciales locales, estado del editor y salidas de las herramientas detectadas. No deja de versionar archivos que ya estaban en Git. Los manifiestos, archivos de bloqueo, recursos fuente y scripts de esquema forman parte del código.
 <!-- local-development:end -->
+
+<!-- improvements-20261119:start -->
+## Mejoras y verificación — 2026-11-19 (Cliente JS endurecido (tabs sin bug de cierre, auth limpia y URL configurable) y verificación Ruby)
+
+- Corregido el bug de cierre en `cambiarPestanna` (`$(document).ready` dentro de `while` en `Client/JavaScript/index.js`), limpieza de `authtoken` en logout, validación de IDs con `encodeURIComponent` y soporte de URL configurable (`PROYECTRUBY_API_URL`).
+- Validación: `node --check`, `node --test` sobre helpers REST del cliente, `ruby -c` en scripts/controladores y ejecución de `Guia/HolaMundo.rb` en WSL Ruby 3.2.3.
+<!-- improvements-20261119:end -->
